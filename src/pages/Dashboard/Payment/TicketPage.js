@@ -6,6 +6,7 @@ import useEnrollment from '../../../hooks/api/useEnrollment';
 import ModalityOption from '../../../components/Payment/ModalityOption';
 import AccommodationOption from '../../../components/Payment/AccommodationOption';
 import TicketConfirmation from '../../../components/Payment/TicketConfirmation';
+import { modality } from '../../../utils/ticketUtils';
 
 export default function TicketsPage({ setStep }) {
   const [prices, setPrices] = useState({
@@ -38,7 +39,7 @@ export default function TicketsPage({ setStep }) {
   function calculateTotalPrice() {
     let price = 0;
 
-    if(ticketInfo.modality === 'Online') {
+    if(ticketInfo.modality === modality.online) {
       price += prices.online;
     } else {
       price += prices.presential;
@@ -57,7 +58,7 @@ export default function TicketsPage({ setStep }) {
       includesHotel: false
     };
 
-    if(ticketInfo.modality === 'Online') {
+    if(ticketInfo.modality === modality.online) {
       ticketType.isRemote = true;
     }
 

@@ -3,14 +3,10 @@ import { OptionContainer, Subtitle } from '../../pages/Dashboard/Payment/TicketP
 import Typography from '@material-ui/core/Typography';
 import { toast } from 'react-toastify';
 import useSaveTicket from '../../hooks/api/useSaveTicket';
+import { steps } from '../../utils/ticketUtils';
 
 export default function TicketConfirmation({ price, createTicket, setStep }) {
   const { saveTicketLoading, saveTicket } = useSaveTicket();
-  const steps = {
-    ticket: 1,
-    payment: 2,
-    confirmation: 3,
-  };
 
   async function handleClick() {
     const newTicket = await createTicket();

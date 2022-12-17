@@ -2,13 +2,10 @@ import styled from 'styled-components';
 import { OptionContainer, Subtitle } from '../../pages/Dashboard/Payment/TicketPage';
 import SelectBox from './SelectBox';
 import { useEffect, useState } from 'react';
+import { modality } from '../../utils/ticketUtils';
 
 export default function ModalityOption({ prices, ticketInfo, setTicketInfo }) {
   const [selectedOption, setSelectedOption] = useState(null);
-  const options = {
-    online: 'Online',
-    presential: 'Presencial'
-  };
 
   useEffect(() => {
     if(selectedOption) {
@@ -21,14 +18,14 @@ export default function ModalityOption({ prices, ticketInfo, setTicketInfo }) {
       <Subtitle variant="h6">Primeiro, escolha sua modalidade de ingresso</Subtitle>
       <SelectBoxesWrapper>
         <SelectBox 
-          option={options.presential} 
+          option={modality.presential} 
           price={`R$ ${prices.presential}`} 
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
 
         <SelectBox 
-          option={options.online} 
+          option={modality.online} 
           price={`R$ ${prices.online}`} 
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
