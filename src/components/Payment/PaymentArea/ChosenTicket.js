@@ -1,18 +1,13 @@
 import styled from 'styled-components';
 import { Subtitle } from '../../../components/Enum/Texts';
 
-export function ChosenTicket({
-  ticket = {
-    type: 'Presencial + hotel',
-    price: 600,
-  },
-}) {
+export function ChosenTicket({ ticket }) {
   return (
     <>
       <Subtitle>Ingresso escolhido</Subtitle>
       <StyledYellowBox>
-        <h3>{ticket.type}</h3>
-        <p>R${ticket.price}</p>
+        <h3>{ticket?.TicketType.name}</h3>
+        <p>R${ticket?.TicketType.price}</p>
       </StyledYellowBox>
     </>
   );
@@ -23,6 +18,7 @@ const StyledYellowBox = styled.div`
   height: 108px;
   background: #ffeed2;
   border-radius: 20px;
+  margin-bottom: 20px !important;
 
   display: flex;
   flex-direction: column;
