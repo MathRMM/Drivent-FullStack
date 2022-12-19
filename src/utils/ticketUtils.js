@@ -1,4 +1,5 @@
 const steps = {
+  completeEnrollment: 0,
   ticket: 1,
   payment: 2,
   confirmation: 3,
