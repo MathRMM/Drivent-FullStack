@@ -1,15 +1,22 @@
 import{ useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
-import TicketsPage from './TicketPage';
+import TicketsPage, { Subtitle } from './TicketPage';
 import useTicket from '../../../hooks/api/useTicket';
 import { steps } from '../../../utils/ticketUtils';
+import useEnrollment from '../../../hooks/api/useEnrollment';
+import { NoEnrollmentMessageWrapper } from '../../../components/Payment/noEnrollmentMessageWrapper';
 
 export default function Payment() {
   const ticket = useTicket().ticket;
+  const enrollment = useEnrollment().enrollment;
   const [step, setStep] = useState(steps.ticket);
 
   useEffect(() => {
+    if(!enrollment) {
+      setStep(steps.completeEnrollment);
+    }
+
     if(ticket) {
       if(ticket.status === 'RESERVED') {
         setStep(steps.payment);
@@ -22,10 +29,15 @@ export default function Payment() {
   return (
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography>
+
+      {step === steps.completeEnrollment && (
+        <NoEnrollmentMessageWrapper>
+          <Subtitle>Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso</Subtitle>
+        </NoEnrollmentMessageWrapper>
+      )}
+
       {step === steps.ticket && (
-        <>
-          <TicketsPage setStep={setStep} />
-        </>
+        <TicketsPage setStep={setStep} />
       )}
 
       {step === steps.payment && (
