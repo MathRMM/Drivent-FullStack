@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import TicketsPage, { Subtitle } from './TicketPage';
 import useTicket from '../../../hooks/api/useTicket';
-import { steps } from '../../../utils/ticketUtils';
+import { status, steps } from '../../../utils/ticketUtils';
 import useEnrollment from '../../../hooks/api/useEnrollment';
 import { NoEnrollmentMessageWrapper } from '../../../components/Payment/noEnrollmentMessageWrapper';
 
@@ -15,10 +15,14 @@ export default function Payment() {
   useEffect(() => {
     if(!enrollment) {
       setStep(steps.completeEnrollment);
+    } else {
+      setStep(steps.ticket);
     }
+  }, [enrollment]);
 
+  useEffect(() => {
     if(ticket) {
-      if(ticket.status === 'RESERVED') {
+      if(ticket.status === status.reserved) {
         setStep(steps.payment);
       } else {
         setStep(step.confirmation);

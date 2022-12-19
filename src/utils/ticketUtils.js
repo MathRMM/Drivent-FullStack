@@ -15,8 +15,14 @@ const accommodation = {
   hotel: 'Com Hotel'
 };
 
+const status = {
+  reserved: 'RESERVED',
+  paid: 'PAID'
+};
+
 export {
   steps,
   modality,
-  accommodation
+  accommodation,
+  status
 };
