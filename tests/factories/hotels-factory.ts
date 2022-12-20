@@ -20,3 +20,9 @@ export async function createRoomWithHotelId(hotelId: number) {
     }
   });
 }
+
+export async function deleteAllRooms() {
+  await prisma.booking.deleteMany({});
+  await prisma.room.deleteMany({});
+  return;
+}
