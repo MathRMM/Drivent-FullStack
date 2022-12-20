@@ -12,6 +12,6 @@ export default function useEvent() {
   return {
     event,
     eventLoading,
-    eventError,
+    eventError
   };
 }

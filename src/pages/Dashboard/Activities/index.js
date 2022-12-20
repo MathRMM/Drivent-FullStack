@@ -3,9 +3,15 @@ import useTicket from '../../../hooks/api/useTicket';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import useTicketsTypes from '../../../hooks/api/useTicketsTypes';
+import useEvent from '../../../hooks/api/useEvent';
+import { eachDayOfInterval, parseISO } from 'date-fns';
+import Day from './Day';
 export default function Activities() {
   const ticket = useTicket().ticket;
   const ticketType = useTicketsTypes().ticketsTypes;
+  const event = useEvent().event;
+  const [eventDays, setEventDays] = useState([]);
+  const [selectedDateBox, setSelectedDateBox] = useState(0);
   const [isPaid, setIsPaid] = useState(false);
   const [isRemote, setIsRemote] = useState(false);
   useEffect(() => {
@@ -22,6 +28,7 @@ export default function Activities() {
           }
         }
       }
+      setEventDays(eachDayOfInterval({ start: parseISO(event.startsAt), end: parseISO(event.endsAt) }));
     }
   }, [ticket]);
   return (
@@ -35,7 +42,15 @@ export default function Activities() {
             </CenterWarning>
           ):(
             <>
-              Em breve...
+              <TypographyText variant="h6">Primeiro, filtre pelo dia do evento: </TypographyText>
+              <DatesBox>{eventDays.map((day, index) => <Day key={index} day={day} selectedDateBox={selectedDateBox} setSelectedDateBox={setSelectedDateBox}/>)}</DatesBox>
+              { (selectedDateBox !== 0) ? (
+                <>
+                  Trilhas de atividades aqui em breve...
+                </>
+              ):(
+                <></>
+              ) }
             </>
           )}
         </>
@@ -47,6 +62,11 @@ export default function Activities() {
     </>
   );
 }
+
+const DatesBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
 
 const CenterWarning = styled.div`
   width: 100%;
@@ -75,4 +95,8 @@ const RemoteWarning = styled(Typography)`
 
 const StyledTypography = styled(Typography)`
   margin-bottom: 37px!important;
+`;
+
+const TypographyText = styled(Typography)`
+  color: #8E8E8E;
 `;
