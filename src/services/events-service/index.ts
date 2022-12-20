@@ -26,7 +26,7 @@ async function isCurrentEventActive(): Promise<boolean> {
 
 const eventsService = {
   getFirstEvent,
-  isCurrentEventActive,
+  isCurrentEventActive
 };
 
 export default eventsService;
