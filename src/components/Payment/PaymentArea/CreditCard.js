@@ -18,9 +18,8 @@ import Input from '../../Form/Input';
 import { ErrorMsg } from '../../PersonalInformationForm/ErrorMsg';
 import MuiButton from '@material-ui/core/Button';
 
-export default function PaymentForm() {
-  const { ticket } = useTicket();
-  const { payment, createPayment } = useSavePayment();
+export default function PaymentForm({ ticket }) {
+  const { createPayment } = useSavePayment();
   const { handleSubmit, handleChange, data, errors, setData, customHandleChange } = useForm({
     initialValues: {
       cvc: '',

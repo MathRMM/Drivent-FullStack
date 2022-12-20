@@ -4,15 +4,17 @@ import Typography from '@material-ui/core/Typography';
 import { toast } from 'react-toastify';
 import useSaveTicket from '../../hooks/api/useSaveTicket';
 import { steps } from '../../utils/ticketUtils';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 export default function TicketConfirmation({ price, createTicket, setStep }) {
   const { saveTicketLoading, saveTicket } = useSaveTicket();
-
+  const setLocalTicket = useLocalStorage('ticket', {})[1];
   async function handleClick() {
     const newTicket = await createTicket();
 
     try {
-      await saveTicket(newTicket);
+      const ticket = await saveTicket(newTicket);
+      setLocalTicket(ticket);
       toast('Informações salvas com sucesso!');
       setStep(steps.payment);
     } catch (err) {

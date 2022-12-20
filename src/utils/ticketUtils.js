@@ -1,4 +1,5 @@
 const steps = {
+  completeEnrollment: 0,
   ticket: 1,
   payment: 2,
   confirmation: 3,
@@ -14,8 +15,14 @@ const accommodation = {
   hotel: 'Com Hotel'
 };
 
+const status = {
+  reserved: 'RESERVED',
+  paid: 'PAID'
+};
+
 export {
   steps,
   modality,
-  accommodation
+  accommodation,
+  status
 };
