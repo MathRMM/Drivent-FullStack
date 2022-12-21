@@ -35,6 +35,8 @@ model Event {
   title              String   @db.VarChar(255)
   backgroundImageUrl String   @db.VarChar(255)
   logoImageUrl       String   @db.VarChar(255)
+  Activities         Activity[]
+  Places             Place[]
   startsAt           DateTime
   endsAt             DateTime
   createdAt          DateTime @default(now())
@@ -135,6 +137,29 @@ model Booking {
   userId    Int
   Room      Room     @relation(fields: [roomId], references: [id])
   roomId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Place {
+  id         Int      @id @default(autoincrement())
+  name       String
+  eventId    Int
+  Event      Event    @relation(fields: [eventId], references: [id])
+  Activities Activity[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Activity {
+  id        Int      @id @default(autoincrement())
+  name      String
+  eventId   Int
+  Event     Event    @relation(fields: [eventId], references: [id])
+  placeId   Int
+  Place     Place    @relation(fields: [placeId], references: [id])
+  startsAt  DateTime
+  endsAt    DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
