@@ -2,6 +2,7 @@ const steps = {
   paymentRequired: 1,
   validateBooking: 2,
   hotels: 3,
+  summary: 4,
 };
 
 const ticketStatus = {
