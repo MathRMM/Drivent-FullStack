@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const NoPaymentMessageWrapper = styled.div`
+export const CannotBookingMessageWrapper = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
@@ -11,4 +11,8 @@ line-height: 23.44px;
 height: 60vh;
 p{
   max-width: 455px;  
-}`;
+}
+span{
+  max-width: 510px;
+}
+`;
