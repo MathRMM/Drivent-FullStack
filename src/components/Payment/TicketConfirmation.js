@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import useSaveTicket from '../../hooks/api/useSaveTicket';
 import { steps } from '../../utils/ticketUtils';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { ConfirmationButton } from '../ConfirmationButton';
 
 export default function TicketConfirmation({ price, createTicket, setStep }) {
   const { saveTicketLoading, saveTicket } = useSaveTicket();
@@ -31,16 +32,6 @@ export default function TicketConfirmation({ price, createTicket, setStep }) {
     </OptionContainer>
   );
 }
-
-const ConfirmationButton = styled.button`
-    width: 162px;
-    height: 37px;
-    background-color: #E0E0E0;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-`;
 
 const StyledTypography = styled(Typography)`
     text-align: center!important;
