@@ -1,29 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 
 import useTicket from '../../../hooks/api/useTicket';
 import { status, steps } from '../../../utils/ticketUtils';
 import useEnrollment from '../../../hooks/api/useEnrollment';
-import useLocalStorage from '../../../hooks/useLocalStorage';
+import UserContext from '../../../contexts/UserContext';
 
 import TicketsPage, { Subtitle } from './TicketPage';
 import { NoEnrollmentMessageWrapper } from '../../../components/Payment/noEnrollmentMessageWrapper';
 import PaymentArea from '../../../components/Payment/PaymentArea';
+import PaymentConfirm from '../../../components/Payment/PaymentArea/PaymentConfirm';
 
 export default function Payment() {
   const enrollment = useEnrollment().enrollment;
   const [step, setStep] = useState(steps.completeEnrollment);
-  const ticket = useLocalStorage('ticket', false)[0] || useTicket().ticket;
-  console.log(ticket);
+  const { ticket } = useTicket();
+  const { userData, setUserData } = useContext(UserContext);
 
   useEffect(() => {
     if (enrollment) {
-      if(ticket) {
-        if(ticket.status === status.reserved) {
+      if (ticket) {
+        setUserData({ ...userData, ticket });
+        if (ticket.status === status.reserved) {
           setStep(steps.payment);
         } else {
-          setStep(step.confirmation);
+          setStep(steps.confirmation);
         }
       } else setStep(steps.ticket);
     }
@@ -47,7 +49,7 @@ export default function Payment() {
         </>
       )}
 
-      {step === steps.confirmation && <Subtitle>Pagamento realizado</Subtitle>}
+      {step === steps.confirmation && <PaymentConfirm />}
     </>
   );
 }
@@ -55,4 +57,3 @@ export default function Payment() {
 const StyledTypography = styled(Typography)`
   margin-bottom: 37px !important;
 `;
-
