@@ -6,6 +6,8 @@ import { steps, ticketStatus, ticketType } from '../../../utils/hotelsUtils';
 import useTicket from '../../../hooks/api/useTicket';
 import { CannotBookingMessageWrapper } from '../../../components/Hotels/cannotBookingMessageWrapper';
 import HotelPage from '../Hotel/HotelPage';
+import useBooking from '../../../hooks/api/useBooking';
+import BookingInfo from '../../../components/Booking/BookingInfo';
 
 export default function Hotels() {
   const { gethotelsData } = useHotels();
@@ -13,8 +15,13 @@ export default function Hotels() {
   const [isPaymentRequired, setIsPaymentRequired] = useState(false);
   const [step, setStep] = useState(steps.paymentConfirmation);
   const ticket = useTicket().ticket;
+  const booking = useBooking().booking;
 
   useEffect(() => {
+    if(booking) {
+      return setStep(steps.summary);
+    }
+    
     if(ticket) {
       if(ticket.status === ticketStatus.reserved) {
         return setStep(steps.paymentRequired);
@@ -26,7 +33,7 @@ export default function Hotels() {
         return setStep(steps.hotels);
       }
     }
-  }, [ticket]);
+  }, [ticket, booking]);
 
   return( 
     <>
@@ -47,6 +54,10 @@ export default function Hotels() {
       {step === steps.hotels && (
         <HotelPage></HotelPage>
       )}
+
+      {step === steps.summary && (
+        <BookingInfo booking={booking}/>
+      )}    
     </>);
 }
 
