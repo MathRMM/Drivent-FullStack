@@ -5,6 +5,7 @@ import  useHotels from '../../../hooks/api/useHotels';
 import { steps, ticketStatus, ticketType } from '../../../utils/hotelsUtils';
 import useTicket from '../../../hooks/api/useTicket';
 import { CannotBookingMessageWrapper } from '../../../components/Hotels/cannotBookingMessageWrapper';
+import HotelPage from '../Hotel/HotelPage';
 
 export default function Hotels() {
   const { gethotelsData } = useHotels();
@@ -15,17 +16,13 @@ export default function Hotels() {
 
   useEffect(() => {
     if(ticket) {
-      console.log(ticket.status);
       if(ticket.status === ticketStatus.reserved) {
-        console.log('entra');
         return setStep(steps.paymentRequired);
       } 
       if(ticket.ticketTypeId === ticketType.online || ticket.ticketTypeId === ticketType.noHotel) {
-        console.log('entra, mas nao devia');
         return setStep(steps.validateBooking);
       }
       else {
-        console.log('entra, mas nao devia mesmo');
         return setStep(steps.hotels);
       }
     }
@@ -48,7 +45,7 @@ export default function Hotels() {
       )}
 
       {step === steps.hotels && (
-        <>Lista hotels</>
+        <HotelPage></HotelPage>
       )}
     </>);
 }
