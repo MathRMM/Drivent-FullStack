@@ -1,16 +1,4 @@
 import { isValid, isExpirationDateValid, isSecurityCodeValid, getCreditCardNameByNumber } from 'creditcard.js';
-import dayjs from 'dayjs';
-
-export function CreditValidation({ cvc, expiry, number }) {
-  const date = expiry.split('/');
-  const validation = {
-    validNumber: isValid(number),
-    validExpiry: isExpirationDateValid(date[0], '20' + date[1]),
-    validCvc: isSecurityCodeValid(number, cvc),
-    CardIssuer: getCreditCardNameByNumber(number),
-  };
-  console.log(validation);
-}
 
 const validation = {
   name: {
@@ -48,9 +36,4 @@ function isValidString(value) {
 function isValidExpiry(expiry) {
   const date = expiry.split('/');
   return isExpirationDateValid(date[0], '20' + date[1]);
-}
-
-function isValidCVC(number, cvc) {
-  console.log(number, cvc);
-  return isSecurityCodeValid(number, cvc);
 }

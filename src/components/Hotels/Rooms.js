@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Subtitle } from './HotelsWrapper';
+import { Subtitle } from '../../pages/Dashboard/Hotel/HotelPage';
 import { useState } from 'react';
 import useHotel from '../../hooks/api/useHotel';
 import { useEffect } from 'react';
@@ -49,7 +49,7 @@ export default function Rooms({ hotelId, setStep }) {
     
   return (
     <>
-      <Subtitle>Ótima pedida! Agora escolha seu quarto</Subtitle>
+      <Subtitle variant='h6'>Ótima pedida! Agora escolha seu quarto</Subtitle>
       <RoomsWrapper>
         {rooms.map((room, index) => (
           <RoomBox 

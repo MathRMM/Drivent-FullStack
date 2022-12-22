@@ -5,9 +5,9 @@ import  useHotels from '../../../hooks/api/useHotels';
 import { steps, ticketStatus, ticketType } from '../../../utils/hotelsUtils';
 import useTicket from '../../../hooks/api/useTicket';
 import { CannotBookingMessageWrapper } from '../../../components/Hotels/cannotBookingMessageWrapper';
+import HotelPage from '../Hotel/HotelPage';
 import useBooking from '../../../hooks/api/useBooking';
 import BookingInfo from '../../../components/Booking/BookingInfo';
-import HotelsWrapper from '../../../components/Hotels/HotelsWrapper';
 
 export default function Hotels() {
   const { gethotelsData } = useHotels();
@@ -53,7 +53,7 @@ export default function Hotels() {
       )}
 
       {step === steps.hotels && (
-        <HotelsWrapper setStep={setStep}/>
+        <HotelPage setStep={setStep}/>
       )}
 
       {step === steps.summary && (

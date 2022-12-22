@@ -1,21 +1,23 @@
 import styled from 'styled-components';
-import { OptionContainer, Subtitle } from '../../pages/Dashboard/Payment/TicketPage';
-import Typography from '@material-ui/core/Typography';
+import { useContext } from 'react';
 import { toast } from 'react-toastify';
+
+import UserContext from '../../contexts/UserContext';
 import useSaveTicket from '../../hooks/api/useSaveTicket';
 import { steps } from '../../utils/ticketUtils';
-import useLocalStorage from '../../hooks/useLocalStorage';
+import { OptionContainer, Subtitle } from '../../pages/Dashboard/Payment/TicketPage';
+import Typography from '@material-ui/core/Typography';
 import { ConfirmationButton } from '../ConfirmationButton';
 
 export default function TicketConfirmation({ price, createTicket, setStep }) {
   const { saveTicketLoading, saveTicket } = useSaveTicket();
-  const setLocalTicket = useLocalStorage('ticket', {})[1];
+  const { userData, setUserData } = useContext(UserContext);
   async function handleClick() {
     const newTicket = await createTicket();
 
     try {
-      const ticket = await saveTicket(newTicket);
-      setLocalTicket(ticket);
+      const response = await saveTicket(newTicket);
+      await setUserData({ ...userData, ticket: response });
       toast('Informações salvas com sucesso!');
       setStep(steps.payment);
     } catch (err) {
@@ -25,8 +27,10 @@ export default function TicketConfirmation({ price, createTicket, setStep }) {
 
   return (
     <OptionContainer>
-      <Subtitle variant="h6">Fechado! O total ficou em <strong>R$ {price}</strong>. Agora é só confirmar:</Subtitle>
-      <ConfirmationButton type="submit" disabled={ saveTicketLoading } onClick={handleClick}>
+      <Subtitle variant="h6">
+        Fechado! O total ficou em <strong>R$ {price}</strong>. Agora é só confirmar:
+      </Subtitle>
+      <ConfirmationButton type="submit" disabled={saveTicketLoading} onClick={handleClick}>
         <StyledTypography variant="body2">RESERVAR INGRESSO</StyledTypography>
       </ConfirmationButton>
     </OptionContainer>
@@ -34,7 +38,7 @@ export default function TicketConfirmation({ price, createTicket, setStep }) {
 }
 
 const StyledTypography = styled(Typography)`
-    text-align: center!important;
-    line-height: 1!important;
-    font-size: 12px!important;
+  text-align: center !important;
+  line-height: 1 !important;
+  font-size: 12px !important;
 `;

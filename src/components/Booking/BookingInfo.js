@@ -11,9 +11,9 @@ export default function BookingInfo() {
   const [capacity, setCapacity] = useState('');
   const [booked, setBooked] = useState(occupants.single);
   const booking = useBooking().booking;
-  const roomOccupancy = useRoomOccupancy(booking?.Room.id).roomOccupancy;
-  
-  useEffect(() => {
+  const { getRoomOccupancy } = useRoomOccupancy();
+  console.log(booked);
+  useEffect(async() => {
     if(booking?.Room.capacity === 1) {
       setCapacity(capacityOptions.single);
     } else if(booking?.Room.capacity === 2) {
@@ -21,13 +21,15 @@ export default function BookingInfo() {
     } else {
       setCapacity(capacityOptions.triple);
     }
-  }, [booking]);
 
-  useEffect(() => {
-    if(roomOccupancy?.occupancy > 1) {
-      setBooked(`${occupants.more} ${roomOccupancy.occupancy - 1}`);
+    if(booking) {
+      const response = await getRoomOccupancy(booking.Room.id);
+      
+      if(response.occupancy > 1) {
+        setBooked(`${occupants.more} ${response.occupancy - 1}`);
+      }
     }
-  }, [roomOccupancy]);
+  }, [booking]);
 
   return (
     <>
