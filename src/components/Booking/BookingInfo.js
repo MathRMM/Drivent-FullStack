@@ -5,21 +5,23 @@ import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import { ConfirmationButton } from '../ConfirmationButton';
 import useRoomOccupancy from '../../hooks/api/useRoomOccupancy';
+import useBooking from '../../hooks/api/useBooking';
 
-export default function BookingInfo({ booking }) {
+export default function BookingInfo() {
   const [capacity, setCapacity] = useState('');
   const [booked, setBooked] = useState(occupants.single);
-  const roomOccupancy = useRoomOccupancy(booking.Room.id).roomOccupancy;
+  const booking = useBooking().booking;
+  const roomOccupancy = useRoomOccupancy(booking?.Room.id).roomOccupancy;
   
   useEffect(() => {
-    if(booking.Room.capacity === 1) {
+    if(booking?.Room.capacity === 1) {
       setCapacity(capacityOptions.single);
-    } else if(booking.Room.capacity === 2) {
+    } else if(booking?.Room.capacity === 2) {
       setCapacity(capacityOptions.double);
     } else {
       setCapacity(capacityOptions.triple);
     }
-  }, []);
+  }, [booking]);
 
   useEffect(() => {
     if(roomOccupancy?.occupancy > 1) {
@@ -32,12 +34,12 @@ export default function BookingInfo({ booking }) {
       <Subtitle variant="h6">Você já escolheu seu quarto:</Subtitle>
 
       <SummaryWrapper>
-        <img src={booking.Room.Hotel.image} alt='Hotel'/>
+        <img src={booking?.Room.Hotel.image} alt='Hotel'/>
 
-        <Typography variant='h6'>{booking.Room.Hotel.name}</Typography>
+        <Typography variant='h6'>{booking?.Room.Hotel.name}</Typography>
 
         <Typography variant='body2'>Quarto reservado</Typography>
-        <Typography variant='body2'>{`${booking.Room.name} (${capacity})`}</Typography>
+        <Typography variant='body2'>{`${booking?.Room.name} (${capacity})`}</Typography>
 
         <Typography variant='body2'>Pessoas no seu quarto</Typography>
         <Typography variant='body2'>{`${booked}`}</Typography>

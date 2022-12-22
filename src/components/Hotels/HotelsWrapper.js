@@ -2,11 +2,11 @@ import Rooms from './Rooms';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 
-export default function HotelsWrapper() {
+export default function HotelsWrapper({ setStep }) {
   const hotelId = 2;
   
   return (
-    <Rooms hotelId={hotelId}/>
+    <Rooms hotelId={hotelId} setStep={setStep}/>
   );
 }
 

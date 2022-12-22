@@ -19,3 +19,23 @@ export async function getRoomOccupancy(roomId, token) {
   
   return response.data;
 }
+
+export async function postBooking(body, token) {
+  const response = await api.post('/booking', body, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  
+  return response.data;
+}
+
+export async function changeBooking(data, token) {
+  const response = await api.put(`/booking/${data?.bookingId}`, data?.roomId, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  
+  return response.data;
+}

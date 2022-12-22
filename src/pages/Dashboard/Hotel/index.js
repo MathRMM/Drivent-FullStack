@@ -16,24 +16,25 @@ export default function Hotels() {
   const [step, setStep] = useState(steps.paymentConfirmation);
   const ticket = useTicket().ticket;
   const booking = useBooking().booking;
+  
+  useEffect(() => {
+    if(ticket && !booking) {
+      if(ticket.status === ticketStatus.reserved) {
+        setStep(steps.paymentRequired);
+      } else if(ticket.ticketTypeId === ticketType.online || ticket.ticketTypeId === ticketType.noHotel) {
+        setStep(steps.validateBooking);
+      }
+      else {
+        setStep(steps.hotels);
+      }
+    }
+  }, [ticket]);
 
   useEffect(() => {
     if(booking) {
-      return setStep(steps.summary);
+      setStep(steps.summary);
     }
-    
-    if(ticket) {
-      if(ticket.status === ticketStatus.reserved) {
-        return setStep(steps.paymentRequired);
-      } 
-      if(ticket.ticketTypeId === ticketType.online || ticket.ticketTypeId === ticketType.noHotel) {
-        return setStep(steps.validateBooking);
-      }
-      else {
-        return setStep(steps.hotels);
-      }
-    }
-  }, [ticket, booking]);
+  }, [booking]);
 
   return( 
     <>
@@ -52,11 +53,11 @@ export default function Hotels() {
       )}
 
       {step === steps.hotels && (
-        <HotelsWrapper/>
+        <HotelsWrapper setStep={setStep}/>
       )}
 
       {step === steps.summary && (
-        <BookingInfo booking={booking}/>
+        <BookingInfo/>
       )}    
     </>);
 }

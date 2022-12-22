@@ -3,22 +3,23 @@ import { Subtitle } from './HotelsWrapper';
 import { useState } from 'react';
 import useHotel from '../../hooks/api/useHotel';
 import { useEffect } from 'react';
-import { useContext } from 'react';
-import UserContext from '../../contexts/UserContext';
 import Typography from '@material-ui/core/Typography';
 import { IoPerson, IoPersonOutline } from 'react-icons/io5';
 import useRoomOccupancy from '../../hooks/api/useRoomOccupancy';
 import { findSelectedAndOccupiedVacancies, roomStatus, vacancyStatus } from '../../utils/roomsUtils';
+import { ConfirmationButton } from '../ConfirmationButton';
+import useSaveBooking from '../../hooks/api/useSaveBooking';
+import { toast } from 'react-toastify';
+import { steps } from '../../utils/hotelsUtils';
 
-export default function Rooms({ hotelId }) {
+export default function Rooms({ hotelId, setStep }) {
   const hotel = useHotel(hotelId).hotel;
-  const userId = useContext(UserContext).userData.user.id;
   const [rooms, setRooms] = useState([]);
   const [wasSelected, setWasSelected] = useState([]);
+  const { saveBooking, saveBookingLoading } = useSaveBooking();
   const [bookParams, setBookParams] = useState({ 
     id: null, 
-    roomId: null, 
-    userId: userId,
+    roomId: null,
   });
   
   useEffect(() => {
@@ -26,6 +27,25 @@ export default function Rooms({ hotelId }) {
       setRooms(hotel.Rooms.sort((a, b) => Number(a.name) - Number(b.name)));
     }
   }, [hotel]);
+
+  async function handleClick() {
+    try {
+      if(bookParams.id) {
+        await saveBooking({
+          bookingId: bookParams.id,
+          roomId: bookParams.roomId,
+        });
+      } else {
+        await saveBooking({
+          roomId: bookParams.roomId
+        });
+      }
+      toast('Informações salvas com sucesso!');
+      setStep(steps.summary);
+    } catch (err) {
+      toast('Não foi possível salvar suas informações!');
+    }
+  }
     
   return (
     <>
@@ -42,6 +62,12 @@ export default function Rooms({ hotelId }) {
           />
         ))}
       </RoomsWrapper>
+    
+      {bookParams.roomId && (
+        <ConfirmationButton type="submit" disabled={ saveBookingLoading } onClick={handleClick}>
+          <ButtonTypography variant="body2">RESERVAR INGRESSO</ButtonTypography>
+        </ConfirmationButton>
+      )}
     </>
   );
 }
@@ -127,7 +153,6 @@ function Vacancy({
   const [color, setColor] = useState(vacancyStatus.primary);
   
   useEffect(() => {
-    console.log(status);
     if(status === roomStatus.full) {
       setColor(vacancyStatus.full);
     }
@@ -165,6 +190,7 @@ const RoomsWrapper = styled.div`
     display: fex;
     justify-content: left;
     flex-wrap: wrap;
+    margin-bottom: 46px;
 `;
 
 const RoomBoxStyle = styled.div`
@@ -197,4 +223,10 @@ const VacancyStyle = styled.span`
         margin-left: 2px;
         color: ${props => props.color};
     }
+`;
+
+const ButtonTypography = styled(Typography)`
+    text-align: center!important;
+    line-height: 1!important;
+    font-size: 12px!important;
 `;
