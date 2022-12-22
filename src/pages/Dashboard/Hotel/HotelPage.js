@@ -1,35 +1,37 @@
 import{ useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
 import useHotels from '../../../hooks/api/useHotels';
 import { Subtitle } from '../Payment/TicketPage';
+import useRooms from '../../../hooks/api/useRooms';
+import HotelCard from '../Hotel/HotelCard';
 
 export default function HotelPage() {
   const [hotelData, setHotelData] = useState([]);
   const hotelsInfo =  useHotels().hotels;
   const list = hotelsInfo;
-    
+
   function listHotels() {
     const hotels = list.map((hotel) => {
       return  {
         hotelName: hotel.name, 
         hotelImage: hotel.image,
+        hotelId: hotel.id,
       };
     });
     
     return hotels; 
   };
-
+  
   useEffect(() => {
     if(list) {
       const hotelInfo = listHotels();
       setHotelData(hotelInfo);
     };
-  }, []);  
-  //primeira renderizada vem vazia, verificar
+  }, [list]);  
+
   return <> <Subtitle variant='h6'>Primeiro, escolha seu hotel</Subtitle>
     <CardsWrapper> 
-      {hotelData.length > 0 ? (hotelData.map((hotel) => <Card onClick={(() => alert('teste'))}> <img src={hotel.hotelImage} /> <h6>{hotel.hotelName}</h6> </Card> )) : <> Sem hotéis cadastrados no memento</> } 
+      {hotelData.length > 0 ? (hotelData.map((hotel) => <HotelCard hotel={hotel} /> )) : <> Sem hotéis cadastrados no memento</> } 
     </CardsWrapper>
   </>; 
 };
@@ -39,6 +41,22 @@ const CardsWrapper = styled.div`
   display: flex;
   overflow: hidden;
   overflow-x: auto;
+  
+  ::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+  
+}
+::-webkit-scrollbar-track {
+  background: transparent;   
+} 
+::-webkit-scrollbar-thumb {
+  background: #BEBDB8; 
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: lightgray; 
+}
 `;
 
 const Card = styled.div`
