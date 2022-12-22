@@ -5,6 +5,7 @@ import  useHotels from '../../../hooks/api/useHotels';
 import { steps, ticketStatus, ticketType } from '../../../utils/hotelsUtils';
 import useTicket from '../../../hooks/api/useTicket';
 import { CannotBookingMessageWrapper } from '../../../components/Hotels/cannotBookingMessageWrapper';
+import HotelPage from '../Hotel/HotelPage';
 import useBooking from '../../../hooks/api/useBooking';
 import BookingInfo from '../../../components/Booking/BookingInfo';
 
@@ -51,7 +52,7 @@ export default function Hotels() {
       )}
 
       {step === steps.hotels && (
-        <>Lista hotels</>
+        <HotelPage></HotelPage>
       )}
 
       {step === steps.summary && (
