@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { OptionContainer, Subtitle } from '../../pages/Dashboard/Payment/TicketPage';
+import { OptionContainer, Subtitle } from './TicketPage';
 import SelectBox from './SelectBox';
 import { useEffect, useState } from 'react';
-import { accommodation } from '../../utils/ticketUtils';
+import { accommodation } from '../../../utils/ticketUtils';
 
 export default function AccommodationOption({ prices, ticketInfo, setTicketInfo }) {
   const [selectedOption, setSelectedOption] = useState(null);

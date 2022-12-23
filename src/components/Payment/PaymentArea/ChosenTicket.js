@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { Subtitle } from '../../../components/Enum/Texts';
+import { useContext } from 'react';
+import UserContext from '../../../contexts/UserContext';
 
-export function ChosenTicket({ ticket }) {
+export function ChosenTicket() {
+  const { ticket } = useContext(UserContext).userData;
   return (
     <>
       <Subtitle>Ingresso escolhido</Subtitle>

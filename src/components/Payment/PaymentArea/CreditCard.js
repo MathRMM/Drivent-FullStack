@@ -1,8 +1,7 @@
-import React from 'react';
+import { useContext } from 'react';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/es/styles-compiled.css';
 import styled from 'styled-components';
-import { useState } from 'react';
 import { getCreditCardNameByNumber } from 'creditcard.js';
 import { toast } from 'react-toastify';
 
@@ -10,6 +9,8 @@ import { useForm } from '../../../hooks/useForm';
 import useTicket from '../../../hooks/api/useTicket';
 import cardValidation from './CreditCardValidation';
 import useSavePayment from '../../../hooks/api/useSavePaymentCard';
+import UserContext from '../../../contexts/UserContext';
+import { steps } from '../../../utils/ticketUtils';
 
 import { Subtitle } from '../../Enum/Texts';
 import { FormWrapper } from '../../PersonalInformationForm/FormWrapper';
@@ -18,9 +19,12 @@ import Input from '../../Form/Input';
 import { ErrorMsg } from '../../PersonalInformationForm/ErrorMsg';
 import MuiButton from '@material-ui/core/Button';
 
-export default function PaymentForm({ ticket }) {
-  const { createPayment } = useSavePayment();
-  const { handleSubmit, handleChange, data, errors, setData, customHandleChange } = useForm({
+export default function PaymentForm( { setStep }) {
+  const { paymentLoading, createPayment } = useSavePayment();
+  const { userData, setUserData } = useContext(UserContext);
+  const ticket = userData.ticket;
+  const { ticketLoading, getTicket } = useTicket();
+  const { handleSubmit, handleChange, data, errors, setData } = useForm({
     initialValues: {
       cvc: '',
       expiry: '',
@@ -44,7 +48,10 @@ export default function PaymentForm({ ticket }) {
       };
       try {
         await createPayment(newData);
+        const response = await getTicket();
+        setUserData({ ...userData, response });
         toast('Pagamento realizado');
+        setStep(steps.confirmation);
       } catch (error) {
         toast('Não foi possivel completar o pagameto');
       }
@@ -117,7 +124,7 @@ export default function PaymentForm({ ticket }) {
           </InputWrapper>
 
           <SubmitContainer>
-            <Button variant={'contained'} type="submit">
+            <Button variant={'contained'} type="submit" disabled={ticketLoading || paymentLoading}> 
               Finalizar Pagamento
             </Button>
           </SubmitContainer>
