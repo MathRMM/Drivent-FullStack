@@ -4,12 +4,22 @@ import useHotels from '../../../hooks/api/useHotels';
 import HotelCard from '../Hotel/HotelCard';
 import Rooms from '../../../components/Hotels/Rooms';
 import Typography from '@material-ui/core/Typography';
+import useBooking from '../../../hooks/api/useBooking';
 
 export default function HotelPage({ setStep }) {
   const [hotelData, setHotelData] = useState([]);
   const [hotelId, setHotelId] = useState(null);
   const hotelsInfo =  useHotels().hotels;
   const list = hotelsInfo;
+  const { getBooking } = useBooking();
+
+  useEffect(async() => {
+    const booking = await getBooking();
+
+    if(booking) {
+      setHotelId(booking.Room.Hotel.id);
+    }
+  }, []);
 
   function listHotels() {
     const hotels = list.map((hotel) => {
@@ -34,8 +44,9 @@ export default function HotelPage({ setStep }) {
     <Subtitle variant='h6'>Primeiro, escolha seu hotel</Subtitle>
     
     <CardsWrapper> 
-      {hotelData.length > 0 ? (hotelData.map((hotel) => 
+      {hotelData.length > 0 ? (hotelData.map((hotel, index) => 
         <HotelCard 
+          key={index}
           hotel={hotel} 
           hotelId={hotelId}
           setHotelId={setHotelId}

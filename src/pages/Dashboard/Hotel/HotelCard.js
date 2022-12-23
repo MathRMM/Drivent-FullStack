@@ -10,7 +10,7 @@ export default function HotelCard({ hotel, hotelId, setHotelId }) {
   const [accommodationType, setAccommodationType] = ('');
   const [roomVacancies, setRoomVacancies] = (''); 
   const rooms = useRooms(hotel.hotelId).rooms;
-  console.log(rooms);
+  
   function getTextCapacity(capacity) {
     return capacityText[capacity];
   };
@@ -44,7 +44,7 @@ export default function HotelCard({ hotel, hotelId, setHotelId }) {
 
   return (
     <Card hotelId={hotelId} hotel={hotel} onClick={() => setHotelId(hotel.hotelId)}> 
-      <img src={hotel.hotelImage} /> 
+      <img src={hotel.hotelImage} alt='Hotel'/> 
       <h6>{hotel.hotelName}</h6> 
       <AccoommodationsWrapper>
         <h5>Tipos de Acomodação:</h5>

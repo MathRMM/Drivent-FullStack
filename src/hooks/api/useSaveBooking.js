@@ -12,11 +12,11 @@ export default function useSaveBooking() {
     act: saveBooking
   } = useAsync((data) => {
     if(data?.bookingId) {
-      return bookingApi.changeBooking(data, token), false;
+      return bookingApi.changeBooking(data, token);
     } 
 
-    return bookingApi.postBooking(data, token), false;
-  });
+    return bookingApi.postBooking(data, token);
+  }, false);
 
   return {
     saveBookingLoading,
