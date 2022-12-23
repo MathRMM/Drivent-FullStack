@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import useRooms from '../../../hooks/api/useRooms';
 import { capacityText } from '../../../utils/roomsUtils';
+import { cardStatus } from '../../../utils/hotelsUtils';
 
-export default function HotelCard({ hotel }) {
+export default function HotelCard({ hotel, hotelId, setHotelId }) {
   const [roomData, setRoomData] = useState([]);
   const [accommodationType, setAccommodationType] = ('');
   const [roomVacancies, setRoomVacancies] = (''); 
@@ -41,7 +42,16 @@ export default function HotelCard({ hotel }) {
     };
   }, [rooms]);
 
-  return <Card > <img src={hotel.hotelImage} /> <h6>{hotel.hotelName}</h6> <AccoommodationsWrapper> <h5>Tipos de Acomodação:</h5><h6>{roomData}</h6> </AccoommodationsWrapper></Card>;
+  return (
+    <Card hotelId={hotelId} hotel={hotel} onClick={() => setHotelId(hotel.hotelId)}> 
+      <img src={hotel.hotelImage} /> 
+      <h6>{hotel.hotelName}</h6> 
+      <AccoommodationsWrapper>
+        <h5>Tipos de Acomodação:</h5>
+        <h6>{roomData}</h6> 
+      </AccoommodationsWrapper>
+    </Card>
+  );
 };
 
 const Card = styled.div`
@@ -51,7 +61,7 @@ const Card = styled.div`
   height: 264px;
   align-items: center;
   
-  background-color: #EBEBEB;
+  background-color: ${props => props.hotelId === props.hotel.hotelId ? cardStatus.selected : cardStatus.unselected};
   border-radius: 10px;
  
   margin-right: 20px;
@@ -62,6 +72,7 @@ const Card = styled.div`
   h6 {
     font-size: 20px;
     color: #343434;
+    width: 100%;
   }
 
   img {
@@ -78,7 +89,6 @@ const Card = styled.div`
 const AccoommodationsWrapper = styled.div`
   margin-top: 10px;
   width: 100%;
-  margin-left: 10px;
 
   h5 {
     font-weight: 700;
