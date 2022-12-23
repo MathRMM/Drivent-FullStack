@@ -7,7 +7,7 @@ import { status, steps } from '../../../utils/ticketUtils';
 import useEnrollment from '../../../hooks/api/useEnrollment';
 import UserContext from '../../../contexts/UserContext';
 
-import TicketsPage, { Subtitle } from './TicketPage';
+import TicketsPage, { Subtitle } from '../../../components/Payment/TicketArea/TicketPage';
 import { NoEnrollmentMessageWrapper } from '../../../components/Payment/noEnrollmentMessageWrapper';
 import PaymentArea from '../../../components/Payment/PaymentArea';
 import PaymentConfirm from '../../../components/Payment/PaymentArea/PaymentConfirm';

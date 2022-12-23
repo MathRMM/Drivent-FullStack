@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import { OptionContainer, Subtitle } from '../../pages/Dashboard/Payment/TicketPage';
+import { OptionContainer, Subtitle } from './TicketPage';
 import SelectBox from './SelectBox';
 import { useEffect, useState } from 'react';
-import { modality } from '../../utils/ticketUtils';
+import { modality } from '../../../utils/ticketUtils';
 
 export default function ModalityOption({ prices, ticketInfo, setTicketInfo }) {
   const [selectedOption, setSelectedOption] = useState(null);
+  console.log(selectedOption);
 
   useEffect(() => {
     if(selectedOption) {

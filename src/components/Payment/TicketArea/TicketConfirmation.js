@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { useContext } from 'react';
 import { toast } from 'react-toastify';
 
-import UserContext from '../../contexts/UserContext';
-import useSaveTicket from '../../hooks/api/useSaveTicket';
-import { steps } from '../../utils/ticketUtils';
-import { OptionContainer, Subtitle } from '../../pages/Dashboard/Payment/TicketPage';
+import UserContext from '../../../contexts/UserContext';
+import useSaveTicket from '../../../hooks/api/useSaveTicket';
+import { steps } from '../../../utils/ticketUtils';
+
+import { OptionContainer, Subtitle } from './TicketPage';
 import Typography from '@material-ui/core/Typography';
-import { ConfirmationButton } from '../ConfirmationButton';
+import { ConfirmationButton } from '../../ConfirmationButton';
 
 export default function TicketConfirmation({ price, createTicket, setStep }) {
   const { saveTicketLoading, saveTicket } = useSaveTicket();

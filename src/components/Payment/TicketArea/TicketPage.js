@@ -1,12 +1,15 @@
 import{ useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
+
 import useTicketsTypes from '../../../hooks/api/useTicketsTypes';
 import useEnrollment from '../../../hooks/api/useEnrollment';
-import ModalityOption from '../../../components/Payment/ModalityOption';
-import AccommodationOption from '../../../components/Payment/AccommodationOption';
-import TicketConfirmation from '../../../components/Payment/TicketConfirmation';
 import { modality } from '../../../utils/ticketUtils';
+import { calculatePrices, calculateTotalPrice } from '../../../hooks/useCalculator';
+
+import Typography from '@material-ui/core/Typography';
+import TicketConfirmation from './TicketConfirmation';
+import ModalityOption from './ModalityOption';
+import AccommodationOption from './AccommodationOption';
 
 export default function TicketsPage({ setStep }) {
   const [prices, setPrices] = useState({
@@ -22,35 +25,18 @@ export default function TicketsPage({ setStep }) {
   const [totalPrice, setTotalPrice] = useState(0);
   const ticketsTypes = useTicketsTypes().ticketsTypes;
   const enrollment = useEnrollment().enrollment;
+  const total = { prices, ticketInfo, modality };
 
-  function calculatePrices() {
-    const online = ticketsTypes?.find(type => type.isRemote);
-    const presential = ticketsTypes?.find(type => !type.isRemote && !type.includesHotel);
-    const presentialHotel = ticketsTypes?.find(type => !type.isRemote && type.includesHotel);
-    
-    return {
-      online: online?.price,
-      presential: presential?.price,
-      hotel: presentialHotel?.price - presential?.price,
-      noHotel: 0
-    };
-  }
+  useEffect(() => {
+    setPrices(calculatePrices(ticketsTypes));
+  }, [ticketsTypes]);
 
-  function calculateTotalPrice() {
-    let price = 0;
-
-    if(ticketInfo.modality === modality.online) {
-      price += prices.online;
-    } else {
-      price += prices.presential;
+  useEffect(() => {
+    if(ticketInfo.modality && ticketInfo.accommodation) {
+      const price = calculateTotalPrice(total);
+      setTotalPrice(price);
     }
-
-    if(ticketInfo.accommodation === 'Com Hotel') {
-      price += prices.hotel;
-    }
-
-    return price;
-  }
+  }, [ticketInfo]);
 
   function createTicket() {
     let ticketType = {
@@ -75,23 +61,12 @@ export default function TicketsPage({ setStep }) {
       updatedAt: Date.now()
     };
   }
-
-  useEffect(() => {
-    setPrices(calculatePrices());
-  }, [ticketsTypes]);
-
-  useEffect(() => {
-    if(ticketInfo.modality && ticketInfo.accommodation) {
-      const price = calculateTotalPrice();
-      setTotalPrice(price);
-    }
-  }, [ticketInfo]);
   
   return (
     <>
       <ModalityOption prices={prices} ticketInfo={ticketInfo} setTicketInfo={setTicketInfo} />
 
-      {ticketInfo.modality && (
+      {ticketInfo.modality !== modality.online && (
         <AccommodationOption prices={prices} ticketInfo={ticketInfo} setTicketInfo={setTicketInfo} />
       )}
 
