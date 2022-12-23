@@ -6,21 +6,36 @@ import { useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { IoPerson, IoPersonOutline } from 'react-icons/io5';
 import useRoomOccupancy from '../../hooks/api/useRoomOccupancy';
-import { findSelectedAndOccupiedVacancies, roomStatus, vacancyStatus } from '../../utils/roomsUtils';
+import { findSelectedAndOccupiedVacancies, getVacancies, roomStatus, vacancyStatus } from '../../utils/roomsUtils';
 import { ConfirmationButton } from '../ConfirmationButton';
 import useSaveBooking from '../../hooks/api/useSaveBooking';
 import { toast } from 'react-toastify';
 import { steps } from '../../utils/hotelsUtils';
+import useBooking from '../../hooks/api/useBooking';
 
 export default function Rooms({ hotelId, setStep }) {
   const hotel = useHotel(hotelId).hotel;
+  const { getBooking } = useBooking();
   const [rooms, setRooms] = useState([]);
   const [wasSelected, setWasSelected] = useState([]);
   const { saveBooking, saveBookingLoading } = useSaveBooking();
+  const [currentRoom, setCurrentRoom] =useState({});
   const [bookParams, setBookParams] = useState({ 
     id: null, 
     roomId: null,
   });
+
+  useEffect(async() => {
+    const booking = await getBooking();
+
+    if(booking) {
+      setCurrentRoom(booking.Room);
+      setBookParams({
+        id: booking.id,
+        roomId: booking.Room.id,
+      });
+    }
+  }, []);
   
   useEffect(() => {
     if(hotel) {
@@ -59,6 +74,7 @@ export default function Rooms({ hotelId, setStep }) {
             setBookParams={setBookParams}
             wasSelected={wasSelected}
             setWasSelected={setWasSelected}
+            currentRoom={currentRoom}
           />
         ))}
       </RoomsWrapper>
@@ -77,27 +93,27 @@ function RoomBox({
   bookParams, 
   setBookParams,
   wasSelected,
-  setWasSelected
+  setWasSelected,
+  currentRoom
 }) {
-  const roomOccupancy = useRoomOccupancy(info.id).roomOccupancy;
+  const { getRoomOccupancy } = useRoomOccupancy();
   const [vacancies, setVacancies]= useState([]);
   const [status, setStatus] = useState(roomStatus.available);
+  const [roomOccupancy, setRoomOccupancy] = useState(null);
   
-  useEffect(() => {
-    if(roomOccupancy) {
-      let aux = [];  
-      
-      for(let i = 0; i < info.capacity - roomOccupancy.occupancy; i ++) {
-        aux.push({ id: i, roomId: info.id, number: Number(info.name), occupied: false });
-      }
-      
-      for(let i = info.capacity - roomOccupancy.occupancy; i < info.capacity; i++) {
-        aux.push({ id: i, roomId: info.id, number: Number(info.name), occupied: true });
-      }
-
-      setVacancies(aux);
+  useEffect(async() => {
+    let response = await getRoomOccupancy(info.id);
+    
+    if(currentRoom.id === info.id) {
+      response.occupancy -= 1;
     }
-  }, [roomOccupancy]);
+
+    const vacanciesInfo = getVacancies(info, response);
+
+    setRoomOccupancy(response);
+
+    setVacancies(vacanciesInfo);
+  }, []);
 
   useEffect(() => {
     if(bookParams.roomId === info.id) {

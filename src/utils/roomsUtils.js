@@ -19,6 +19,20 @@ function findSelectedAndOccupiedVacancies(vacancies, roomId) {
   return answer;
 }
 
+function getVacancies(room, roomOccupancy) {
+  let vacancies = [];  
+    
+  for(let i = 0; i < room.capacity - roomOccupancy.occupancy; i ++) {
+    vacancies.push({ id: i, roomId: room.id, number: Number(room.name), occupied: false });
+  }
+  
+  for(let i = room.capacity - roomOccupancy.occupancy; i < room.capacity; i++) {
+    vacancies.push({ id: i, roomId: room.id, number: Number(room.name), occupied: true });
+  }
+
+  return vacancies;
+}
+
 const capacityText = {
   1: 'Single',
   2: 'Double',
@@ -30,4 +44,5 @@ export {
   roomStatus,
   vacancyStatus,
   findSelectedAndOccupiedVacancies,
+  getVacancies,
 };

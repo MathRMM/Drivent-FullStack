@@ -12,7 +12,7 @@ export default function HotelCard({ hotel, hotelId, setHotelId }) {
   const [roomVacancies, setRoomVacancies] = useState([]); 
 
   const rooms = useRooms(hotel.hotelId).rooms;
-
+  
   function getTextCapacity(capacity) {
     return capacityText[capacity];
   };
@@ -45,7 +45,7 @@ export default function HotelCard({ hotel, hotelId, setHotelId }) {
     };
   }, [rooms]);
 
-  return (roomVacancies ? <Card hotelId={hotelId} hotel={hotel} onClick={() => setHotelId(hotel.hotelId)}> <img src={hotel.hotelImage} /> 
+  return (roomVacancies ? <Card hotelId={hotelId} hotel={hotel} onClick={() => setHotelId(hotel.hotelId)}> <img src={hotel.hotelImage} alt='Hotel' /> 
     <h6>{hotel.hotelName}</h6> 
     <AccommodationsWrapper> <h5>Tipos de Acomodação:</h5><h6>{roomData}</h6> </AccommodationsWrapper> 
     {roomVacancies ? <AvailableRooms rooms={roomVacancies} /> : <></>} 
