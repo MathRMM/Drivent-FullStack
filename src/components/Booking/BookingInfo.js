@@ -6,30 +6,34 @@ import Typography from '@material-ui/core/Typography';
 import { ConfirmationButton } from '../ConfirmationButton';
 import useRoomOccupancy from '../../hooks/api/useRoomOccupancy';
 import useBooking from '../../hooks/api/useBooking';
+import { steps } from '../../utils/hotelsUtils';
 
-export default function BookingInfo() {
+export default function BookingInfo({ setStep }) {
   const [capacity, setCapacity] = useState('');
   const [booked, setBooked] = useState(occupants.single);
-  const booking = useBooking().booking;
+  const [booking, setBooking] = useState(null);
+  const{ getBooking }= useBooking();
   const { getRoomOccupancy } = useRoomOccupancy();
-  console.log(booked);
+  
   useEffect(async() => {
-    if(booking?.Room.capacity === 1) {
+    const bookingResponse = await getBooking();
+
+    if(bookingResponse.Room.capacity === 1) {
       setCapacity(capacityOptions.single);
-    } else if(booking?.Room.capacity === 2) {
+    } else if(bookingResponse.Room.capacity === 2) {
       setCapacity(capacityOptions.double);
     } else {
       setCapacity(capacityOptions.triple);
     }
 
-    if(booking) {
-      const response = await getRoomOccupancy(booking.Room.id);
-      
-      if(response.occupancy > 1) {
-        setBooked(`${occupants.more} ${response.occupancy - 1}`);
-      }
+    const occupancyResponse = await getRoomOccupancy(bookingResponse.Room.id);
+    
+    if(occupancyResponse.occupancy > 1) {
+      setBooked(`${occupants.more} ${occupancyResponse.occupancy - 1}`);
     }
-  }, [booking]);
+    
+    setBooking(bookingResponse);
+  }, []);
 
   return (
     <>
@@ -47,7 +51,7 @@ export default function BookingInfo() {
         <Typography variant='body2'>{`${booked}`}</Typography>
       </SummaryWrapper>
       
-      <ConfirmationButton type="submit" /*disabled={ saveTicketLoading } onClick={handleClick} */>
+      <ConfirmationButton type="submit" onClick={() => setStep(steps.hotels)}>
         <StyledTypography variant="body2">TROCAR DE QUARTO</StyledTypography>
       </ConfirmationButton>
     </>

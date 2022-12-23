@@ -1,4 +1,4 @@
-import { isValid, isExpirationDateValid, isSecurityCodeValid, getCreditCardNameByNumber } from 'creditcard.js';
+import { isValid, isExpirationDateValid } from 'creditcard.js';
 
 const validation = {
   name: {

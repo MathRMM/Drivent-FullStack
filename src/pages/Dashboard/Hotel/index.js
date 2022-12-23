@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
-import  useHotels from '../../../hooks/api/useHotels';
 import { steps, ticketStatus, ticketType } from '../../../utils/hotelsUtils';
 import useTicket from '../../../hooks/api/useTicket';
 import { CannotBookingMessageWrapper } from '../../../components/Hotels/cannotBookingMessageWrapper';
@@ -10,15 +9,14 @@ import useBooking from '../../../hooks/api/useBooking';
 import BookingInfo from '../../../components/Booking/BookingInfo';
 
 export default function Hotels() {
-  const { gethotelsData } = useHotels();
-  const [data, setData] = useState([]);
-  const [isPaymentRequired, setIsPaymentRequired] = useState(false);
-  const [step, setStep] = useState(steps.paymentConfirmation);
-  const ticket = useTicket().ticket;
-  const booking = useBooking().booking;
-  
-  useEffect(() => {
-    if(ticket && !booking) {
+  const [step, setStep] = useState(steps.paymentRequired);
+  const { getTicket } = useTicket();
+  const { getBooking } = useBooking();
+
+  useEffect(async() => {
+    const ticket = await getTicket();
+    
+    if(ticket) {
       if(ticket.status === ticketStatus.reserved) {
         setStep(steps.paymentRequired);
       } else if(ticket.ticketTypeId === ticketType.online || ticket.ticketTypeId === ticketType.noHotel) {
@@ -28,13 +26,13 @@ export default function Hotels() {
         setStep(steps.hotels);
       }
     }
-  }, [ticket]);
 
-  useEffect(() => {
+    const booking = await getBooking();
+    
     if(booking) {
       setStep(steps.summary);
     }
-  }, [booking]);
+  }, []);
 
   return( 
     <>
@@ -57,7 +55,7 @@ export default function Hotels() {
       )}
 
       {step === steps.summary && (
-        <BookingInfo/>
+        <BookingInfo setStep={setStep}/>
       )}    
     </>);
 }
