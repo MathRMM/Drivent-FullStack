@@ -3,7 +3,7 @@ import useToken from '../useToken';
 
 import * as bookingApi from '../../services/bookingApi';
 
-export default function useRoomOccupancy(roomId) {
+export default function useRoomOccupancy() {
   const token = useToken();
   
   const {
@@ -11,7 +11,7 @@ export default function useRoomOccupancy(roomId) {
     loading: roomOccupancyLoading,
     error: roomOccupancyError,
     act: getRoomOccupancy
-  } = useAsync(() => bookingApi.getRoomOccupancy(roomId, token));
+  } = useAsync((data) => bookingApi.getRoomOccupancy(data, token), false);
   
   return {
     roomOccupancy,

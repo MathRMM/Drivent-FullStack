@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import UserContext from '../../contexts/UserContext';
 import useSaveTicket from '../../hooks/api/useSaveTicket';
 import { steps } from '../../utils/ticketUtils';
-
 import { OptionContainer, Subtitle } from '../../pages/Dashboard/Payment/TicketPage';
 import Typography from '@material-ui/core/Typography';
 import { ConfirmationButton } from '../ConfirmationButton';

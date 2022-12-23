@@ -1,12 +1,13 @@
 import{ useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useHotels from '../../../hooks/api/useHotels';
-import { Subtitle } from '../Payment/TicketPage';
-import useRooms from '../../../hooks/api/useRooms';
 import HotelCard from '../Hotel/HotelCard';
+import Rooms from '../../../components/Hotels/Rooms';
+import Typography from '@material-ui/core/Typography';
 
-export default function HotelPage() {
+export default function HotelPage({ setStep }) {
   const [hotelData, setHotelData] = useState([]);
+  const [hotelId, setHotelId] = useState(null);
   const hotelsInfo =  useHotels().hotels;
   const list = hotelsInfo;
 
@@ -19,7 +20,7 @@ export default function HotelPage() {
       };
     });
     
-    return hotels; 
+    return hotels;  
   };
   
   useEffect(() => {
@@ -29,10 +30,22 @@ export default function HotelPage() {
     };
   }, [list]);  
 
-  return <> <Subtitle variant='h6'>Primeiro, escolha seu hotel</Subtitle>
+  return <> 
+    <Subtitle variant='h6'>Primeiro, escolha seu hotel</Subtitle>
+    
     <CardsWrapper> 
-      {hotelData.length > 0 ? (hotelData.map((hotel) => <HotelCard hotel={hotel} /> )) : <> Sem hotéis cadastrados no memento</> } 
+      {hotelData.length > 0 ? (hotelData.map((hotel) => 
+        <HotelCard 
+          hotel={hotel} 
+          hotelId={hotelId}
+          setHotelId={setHotelId}
+        /> 
+      )) : <> Sem hotéis cadastrados no momento</> } 
     </CardsWrapper>
+
+    {hotelId && (
+      <Rooms hotelId={hotelId} setStep={setStep}/>
+    )}
   </>; 
 };
 
@@ -41,6 +54,7 @@ const CardsWrapper = styled.div`
   display: flex;
   overflow: hidden;
   overflow-x: auto;
+  margin-bottom: 40px;
   
   ::-webkit-scrollbar {
   width: 10px;
@@ -59,33 +73,11 @@ const CardsWrapper = styled.div`
 }
 `;
 
-const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 196px;
-  height: 264px;
-  align-items: center;
-  
-  background-color: #EBEBEB;
-  border-radius: 10px;
- 
-  margin-right: 20px;
-  padding-left: 14px;
-  padding-right: 14px;
-  cursor: pointer;
-
-  h6 {
-    font-size: 20px;
-    color: #343434;
-  }
-  
-  img {
-    margin: 16px 0 10px 0;
-    width: 168px;
-    height: 109px;
-    object-fit: fill;
-    border-radius: 5px;
-    background-color: pink;
-  }  
-
+const Subtitle = styled(Typography)`
+    margin-bottom: 17px!important;
+    color: #8E8E8E;
 `;
+
+export {
+  Subtitle,
+};
