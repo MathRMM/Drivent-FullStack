@@ -6,12 +6,14 @@ import AuthLayout from '../../layouts/Auth';
 
 import Input from '../../components/Form/Input';
 import Button from '../../components/Form/Button';
-import { Row, Title, Label } from '../../components/Auth';
+import { Row, Title, Label, Divider, Line, Subtitle, OAuthWrapper } from '../../components/Auth';
 import Link from '../../components/Link';
 
 import EventInfoContext from '../../contexts/EventInfoContext';
 
 import useSignUp from '../../hooks/api/useSignUp';
+import OAuth from '../../components/Auth/OAuth';
+import { githubAuth, googleAuth } from '../../utils/authUtils';
 
 export default function Enroll() {
   const [email, setEmail] = useState('');
@@ -55,6 +57,20 @@ export default function Enroll() {
           <Button type="submit" color="primary" fullWidth disabled={loadingSignUp}>Inscrever</Button>
         </form>
       </Row>
+
+      <Row>
+        <Divider>
+          <Line></Line>
+          <Subtitle>Ou faça login com</Subtitle>
+          <Line></Line>
+        </Divider>
+      </Row>
+
+      <OAuthWrapper>
+        <OAuth logo={googleAuth.logo} name={googleAuth.name} />
+        <OAuth logo={githubAuth.logo} name={githubAuth.name}/>
+      </OAuthWrapper>
+
       <Row>
         <Link to="/sign-in">Já está inscrito? Faça login</Link>
       </Row>
