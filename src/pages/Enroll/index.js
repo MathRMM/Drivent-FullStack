@@ -13,7 +13,7 @@ import EventInfoContext from '../../contexts/EventInfoContext';
 
 import useSignUp from '../../hooks/api/useSignUp';
 import OAuth from '../../components/Auth/OAuth';
-import { githubAuth, googleAuth } from '../../utils/authUtils';
+import { facebookAuth, githubAuth, googleAuth } from '../../utils/authUtils';
 
 export default function Enroll() {
   const [email, setEmail] = useState('');
@@ -69,6 +69,7 @@ export default function Enroll() {
       <OAuthWrapper>
         <OAuth logo={googleAuth.logo} name={googleAuth.name} />
         <OAuth logo={githubAuth.logo} name={githubAuth.name}/>
+        <OAuth logo={facebookAuth.logo} name={facebookAuth.name}/>
       </OAuthWrapper>
 
       <Row>

@@ -15,7 +15,7 @@ import UserContext from '../../contexts/UserContext';
 
 import useSignIn from '../../hooks/api/useSignIn';
 
-import { googleAuth, githubAuth } from '../../utils/authUtils';
+import { googleAuth, githubAuth, facebookAuth } from '../../utils/authUtils';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -67,6 +67,7 @@ export default function SignIn() {
       <OAuthWrapper>
         <OAuth logo={googleAuth.logo} name={googleAuth.name} />
         <OAuth logo={githubAuth.logo} name={githubAuth.name}/>
+        <OAuth logo={facebookAuth.logo} name={facebookAuth.name}/>
       </OAuthWrapper>
 
       <Row>

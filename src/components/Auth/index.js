@@ -62,7 +62,6 @@ div {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 10px;
   cursor: pointer;
 }
 `;
@@ -70,16 +69,16 @@ div {
 export const LogoWrapper = styled.span`
 width: 44px;
 height: 44px;
-margin-bottom: 6px;
 border-radius: 10px;
 border: 1px solid rgba(142,142,142,0.3);
 display: flex;
 align-items: center;
 justify-content: center;
+margin: 0 14px 6px 14px;
 
 img{
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
 } 
 `;
