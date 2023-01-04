@@ -3,12 +3,14 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import useRooms from '../../../hooks/api/useRooms';
 import { capacityText } from '../../../utils/roomsUtils';
+import AvailableRooms from '../Hotel/AvailableRooms';
 import { cardStatus } from '../../../utils/hotelsUtils';
 
 export default function HotelCard({ hotel, hotelId, setHotelId }) {
   const [roomData, setRoomData] = useState([]);
-  const [accommodationType, setAccommodationType] = ('');
-  const [roomVacancies, setRoomVacancies] = (''); 
+  const [accommodationType, setAccommodationType] = useState('');
+  const [roomVacancies, setRoomVacancies] = useState([]); 
+
   const rooms = useRooms(hotel.hotelId).rooms;
   
   function getTextCapacity(capacity) {
@@ -39,19 +41,15 @@ export default function HotelCard({ hotel, hotelId, setHotelId }) {
     if(rooms) {
       const roomsType = getRoomCapacity();
       setRoomData(handleCapacitiesText(roomsType));
+      setRoomVacancies(rooms.Rooms);
     };
   }, [rooms]);
 
-  return (
-    <Card hotelId={hotelId} hotel={hotel} onClick={() => setHotelId(hotel.hotelId)}> 
-      <img src={hotel.hotelImage} alt='Hotel'/> 
-      <h6>{hotel.hotelName}</h6> 
-      <AccoommodationsWrapper>
-        <h5>Tipos de Acomodação:</h5>
-        <h6>{roomData}</h6> 
-      </AccoommodationsWrapper>
-    </Card>
-  );
+  return (roomVacancies ? <Card hotelId={hotelId} hotel={hotel} onClick={() => setHotelId(hotel.hotelId)}> <img src={hotel.hotelImage} alt='Hotel' /> 
+    <h6>{hotel.hotelName}</h6> 
+    <AccommodationsWrapper> <h5>Tipos de Acomodação:</h5><h6>{roomData}</h6> </AccommodationsWrapper> 
+    {roomVacancies ? <AvailableRooms rooms={roomVacancies} /> : <></>} 
+  </Card> : <>Erro</>);  
 };
 
 const Card = styled.div`
@@ -86,7 +84,7 @@ const Card = styled.div`
 
 `;
 
-const AccoommodationsWrapper = styled.div`
+const AccommodationsWrapper = styled.div`
   margin-top: 10px;
   width: 100%;
 
