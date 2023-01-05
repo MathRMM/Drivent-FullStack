@@ -1,35 +1,38 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
-import  useHotels from '../../../hooks/api/useHotels';
 import { steps, ticketStatus, ticketType } from '../../../utils/hotelsUtils';
 import useTicket from '../../../hooks/api/useTicket';
 import { CannotBookingMessageWrapper } from '../../../components/Hotels/cannotBookingMessageWrapper';
+import HotelPage from '../Hotel/HotelPage';
+import useBooking from '../../../hooks/api/useBooking';
+import BookingInfo from '../../../components/Booking/BookingInfo';
 
 export default function Hotels() {
-  const { gethotelsData } = useHotels();
-  const [data, setData] = useState([]);
-  const [isPaymentRequired, setIsPaymentRequired] = useState(false);
-  const [step, setStep] = useState(steps.paymentConfirmation);
-  const ticket = useTicket().ticket;
+  const [step, setStep] = useState(steps.paymentRequired);
+  const { getTicket } = useTicket();
+  const { getBooking } = useBooking();
 
-  useEffect(() => {
+  useEffect(async() => {
+    const ticket = await getTicket();
+    
     if(ticket) {
-      console.log(ticket.status);
       if(ticket.status === ticketStatus.reserved) {
-        console.log('entra');
-        return setStep(steps.paymentRequired);
-      } 
-      if(ticket.ticketTypeId === ticketType.online || ticket.ticketTypeId === ticketType.noHotel) {
-        console.log('entra, mas nao devia');
-        return setStep(steps.validateBooking);
+        setStep(steps.paymentRequired);
+      } else if(ticket.ticketTypeId === ticketType.online || ticket.ticketTypeId === ticketType.noHotel) {
+        setStep(steps.validateBooking);
       }
       else {
-        console.log('entra, mas nao devia mesmo');
-        return setStep(steps.hotels);
+        setStep(steps.hotels);
       }
     }
-  }, [ticket]);
+
+    const booking = await getBooking();
+    
+    if(booking) {
+      setStep(steps.summary);
+    }
+  }, []);
 
   return( 
     <>
@@ -48,8 +51,12 @@ export default function Hotels() {
       )}
 
       {step === steps.hotels && (
-        <>Lista hotels</>
+        <HotelPage setStep={setStep}/>
       )}
+
+      {step === steps.summary && (
+        <BookingInfo setStep={setStep}/>
+      )}    
     </>);
 }
 
