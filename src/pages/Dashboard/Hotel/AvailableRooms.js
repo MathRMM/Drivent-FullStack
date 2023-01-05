@@ -5,14 +5,12 @@ import useBookingList from '../../../hooks/api/useBookingList';
 
 export default function AvailableRooms({ rooms }) {
   const [bookingData, setBookingData] = useState('');
-  const [refresh, setRefresh] = useState(false);
-  
-  const bookingsOfAllHotels = useBookingList().booking; 
-  useEffect(() => {
-    if(bookingsOfAllHotels === null);
-    console.log(bookingsOfAllHotels);
-    setRefresh(true);
-  }, [refresh]);
+  const { getAllBooking } = useBookingList();
+ 
+  useEffect(async() => {
+    const booking = await getAllBooking();
+    setBookingData(booking);    
+  }, []);
   
   function capacitiesSum() { //soma das capacidades por hotels
     const capacitiesPerHotel = rooms.map((value) => {
@@ -20,21 +18,13 @@ export default function AvailableRooms({ rooms }) {
     });
     const hotelId = rooms.map((value) => {return value.hotelId;})[0]; //Sempre virá o mesmo id
   
-    const bookingsMade = bookingsOfAllHotels.filter((booking) => booking.hotelId == hotelId);
-
+    const bookingsMade = bookingData.filter((booking) => booking.hotelId == hotelId);
     const hotelCapacity = capacitiesPerHotel.reduce((acc, capacity) => acc + capacity, 0);
-    const total = hotelCapacity - bookingsMade.length;
-    
+    const total = hotelCapacity - bookingsMade.length; 
     return total;
   };
-
-  useEffect(() => {
-    if(bookingsOfAllHotels) {
-      setBookingData(capacitiesSum());
-    };
-  }, [bookingsOfAllHotels]);
-
-  return bookingData ? <AccommodationsWrapper> <h5>Vagas Disponíveis</h5><span>{ bookingData }</span> </AccommodationsWrapper> : <span>Erro ao carregar as vagas</span>;
+  
+  return bookingData ? <AccommodationsWrapper> <h5>Vagas Disponíveis</h5><span>{ capacitiesSum() }</span> </AccommodationsWrapper> : <span>Erro ao carregar as vagas</span>;
 };
 
 const AccommodationsWrapper = styled.div`
