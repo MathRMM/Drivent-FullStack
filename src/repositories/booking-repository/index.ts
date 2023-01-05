@@ -54,11 +54,16 @@ async function upsertBooking({ id, roomId, userId }: UpdateParams) {
   });
 }
 
+async function findBookingWithHotelId() {
+  return await prisma.$queryRaw `SELECT * FROM "Hotel" JOIN "Room" ON "Hotel".id = "Room"."hotelId" JOIN "Booking" ON "Room".id = "Booking"."roomId"`;
+}
+
 const bookingRepository = {
   create,
   findByRoomId,
   findByUserId,
   upsertBooking,
+  findBookingWithHotelId
 };
 
 export default bookingRepository;
