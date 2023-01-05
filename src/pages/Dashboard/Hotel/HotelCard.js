@@ -8,7 +8,6 @@ import { cardStatus } from '../../../utils/hotelsUtils';
 
 export default function HotelCard({ hotel, hotelId, setHotelId }) {
   const [roomData, setRoomData] = useState([]);
-  const [accommodationType, setAccommodationType] = useState('');
   const [roomVacancies, setRoomVacancies] = useState([]); 
 
   const rooms = useRooms(hotel.hotelId).rooms;
