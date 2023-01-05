@@ -17,7 +17,6 @@ export default function BookingInfo({ setStep }) {
   
   useEffect(async() => {
     const bookingResponse = await getBooking();
-
     if(bookingResponse.Room.capacity === 1) {
       setCapacity(capacityOptions.single);
     } else if(bookingResponse.Room.capacity === 2) {
