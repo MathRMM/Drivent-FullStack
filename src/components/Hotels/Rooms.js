@@ -60,8 +60,7 @@ export default function Rooms({ hotelId, setStep }) {
       toast('Não foi possível salvar suas informações!');
     }
   }
-  console.log(hotelId);
-  console.log(rooms);  
+  
   return (
     <>
       <Subtitle variant='h6'>Ótima pedida! Agora escolha seu quarto</Subtitle>
