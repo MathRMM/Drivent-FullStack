@@ -82,3 +82,11 @@ export async function changeBooking(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+export async function listAllBookingsWithHotelId(req: AuthenticatedRequest, res: Response) {
+  try {
+    const bookings = await bookingService.bookingWithHotelId();
+    return res.status(httpStatus.OK).send(bookings);
+  } catch (error) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}
