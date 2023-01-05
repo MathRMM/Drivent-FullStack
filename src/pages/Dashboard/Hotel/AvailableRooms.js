@@ -10,7 +10,7 @@ export default function AvailableRooms({ rooms }) {
   const bookingsOfAllHotels = useBookingList().booking; 
   useEffect(() => {
     if(bookingsOfAllHotels === null);
-    console.log(bookingsOfAllHotels);
+    
     setRefresh(true);
   }, [refresh]);
   
