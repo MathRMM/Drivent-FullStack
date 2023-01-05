@@ -40,6 +40,10 @@ export default function Rooms({ hotelId, setStep }) {
   useEffect(async() => {
     const hotel = await getHotelData(hotelId);
     setRooms(hotel.Rooms.sort((a, b) => Number(a.name) - Number(b.name)));
+    
+    if(bookParams.roomId) {
+      setBookParams({ ...bookParams, roomId: null });
+    }
   }, [hotelId]);
 
   async function handleClick() {
