@@ -5,7 +5,7 @@ import HotelCard from '../Hotel/HotelCard';
 import Rooms from '../../../components/Hotels/Rooms';
 import Typography from '@material-ui/core/Typography';
 import useBooking from '../../../hooks/api/useBooking';
-
+ 
 export default function HotelPage({ setStep }) {
   const [hotelData, setHotelData] = useState([]);
   const [hotelId, setHotelId] = useState(null);
