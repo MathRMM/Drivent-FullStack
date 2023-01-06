@@ -23,12 +23,13 @@
       }
     ],
     "allowJs": true,
+    "checkJs": false,
     "lib": [
       "es5", "es6", "dom", "dom.iterable"
   ]
   },
   "include": [
     "src",
-    "tests"
-  ]
+    "tests", 
+    "credit-card.d.ts"  ]
 }

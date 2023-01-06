@@ -55,6 +55,7 @@ model Enrollment {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Ticket    Ticket[]
+  Participants Participants[]
 }
 
 model Address {
@@ -158,10 +159,20 @@ model Activity {
   Event     Event    @relation(fields: [eventId], references: [id])
   placeId   Int
   Place     Place    @relation(fields: [placeId], references: [id])
+  Participants Participants[]
+  Vacancies Int
   startsAt  DateTime
   endsAt    DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([startsAt])
+}
+
+model Participants {
+  id        Int      @id @default(autoincrement())
+  enrollmentId Int
+  Enrollment   Enrollment   @relation(fields: [enrollmentId], references: [id])
+  activitiesId Int
+  Activity  Activity @relation(fields: [activitiesId], references: [id])
 }
