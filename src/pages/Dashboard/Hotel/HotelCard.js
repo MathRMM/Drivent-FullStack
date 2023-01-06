@@ -35,7 +35,7 @@ export default function HotelCard({ hotel, hotelId, setHotelId }) {
     }
     return capacities;
   };
-
+ 
   useEffect(() => {
     if(rooms) {
       const roomsType = getRoomCapacity();
