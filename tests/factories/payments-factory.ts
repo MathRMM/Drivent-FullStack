@@ -12,8 +12,18 @@ export async function createPayment(ticketId: number, value: number) {
   });
 }
 
-export function generateCreditCardData() {
+export function generateCreditCardData(isValid?: boolean) {
   const futureDate = faker.date.future();
+
+  if(isValid) {
+    return {
+      issuer: "Mastercard",
+      number: "5313 6704 2308 6009",
+      name: faker.name.findName(),
+      expirationDate: `${futureDate.getMonth() + 1}/${futureDate.getFullYear()}`,
+      cvv: "100",
+    };
+  }
 
   return {
     issuer: faker.name.findName(),
