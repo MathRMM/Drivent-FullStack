@@ -28,7 +28,7 @@ export default function Day({ day, selectedDateBox, setSelectedDateBox }) {
 }
 
 const DateBox = styled.div`
-  width: 140px;
+  width: 158px;
   height: 37px;
   display: flex;
   justify-content: center;
@@ -41,7 +41,7 @@ const DateBox = styled.div`
 `;
 
 const DateBoxSelected = styled.div`
-  width: 140px;
+  width: 158px;
   height: 37px;
   display: flex;
   justify-content: center;
