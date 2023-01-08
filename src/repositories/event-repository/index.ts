@@ -6,7 +6,11 @@ async function findFirst() {
       Activities: true,
       Places: {
         include: {
-          Activities: true
+          Activities: {
+            include: {
+              Participants: true
+            }
+          }
         }
       }
     },
