@@ -1,26 +1,30 @@
 
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import useRoomOccupancy from '../../../hooks/api/useRoomOccupancy';
+import useBookingList from '../../../hooks/api/useBookingList';
 
-export default function AvailableRooms({ rooms /*, hotelId */  }) {
+export default function AvailableRooms({ rooms }) {
   const [bookingData, setBookingData] = useState('');
+  const { getAllBooking } = useBookingList();
  
-  function capacitiesSum() {
-    const particalCount = rooms.map((value) => {
+  useEffect(async() => {
+    const booking = await getAllBooking();
+    setBookingData(booking);    
+  }, []);
+  
+  function capacitiesSum() { //soma das capacidades por hotels
+    const capacitiesPerHotel = rooms.map((value) => {
       return value.capacity;
     });
-    const sum = particalCount.reduce((acc, capacity) => acc + capacity, 0);
-    return sum;
+    const hotelId = rooms.map((value) => {return value.hotelId;})[0]; //Sempre virá o mesmo id
+  
+    const bookingsMade = bookingData.filter((booking) => booking.hotelId == hotelId);
+    const hotelCapacity = capacitiesPerHotel.reduce((acc, capacity) => acc + capacity, 0);
+    const total = hotelCapacity - bookingsMade.length; 
+    return total;
   };
- 
-  useEffect(() => {
-    if(rooms) {
-      setBookingData(capacitiesSum());
-    };
-  }, [rooms]);
-
-  return rooms ? <AccommodationsWrapper> <h5>Vagas Disponíveis</h5><span>{ bookingData }</span> </AccommodationsWrapper> : <span>Erro ao carregar as vagas</span>;
+  
+  return bookingData ? <AccommodationsWrapper> <h5>Vagas Disponíveis</h5><span>{ capacitiesSum() }</span> </AccommodationsWrapper> : <span>Erro ao carregar as vagas</span>;
 };
 
 const AccommodationsWrapper = styled.div`

@@ -14,7 +14,7 @@ import { steps } from '../../utils/hotelsUtils';
 import useBooking from '../../hooks/api/useBooking';
 
 export default function Rooms({ hotelId, setStep }) {
-  const hotel = useHotel(hotelId).hotel;
+  const { getHotelData } = useHotel();
   const { getBooking } = useBooking();
   const [rooms, setRooms] = useState([]);
   const [wasSelected, setWasSelected] = useState([]);
@@ -24,7 +24,7 @@ export default function Rooms({ hotelId, setStep }) {
     id: null, 
     roomId: null,
   });
-
+  
   useEffect(async() => {
     const booking = await getBooking();
 
@@ -37,11 +37,14 @@ export default function Rooms({ hotelId, setStep }) {
     }
   }, []);
   
-  useEffect(() => {
-    if(hotel) {
-      setRooms(hotel.Rooms.sort((a, b) => Number(a.name) - Number(b.name)));
+  useEffect(async() => {
+    const hotel = await getHotelData(hotelId);
+    setRooms(hotel.Rooms.sort((a, b) => Number(a.name) - Number(b.name)));
+    
+    if(bookParams.roomId) {
+      setBookParams({ ...bookParams, roomId: null });
     }
-  }, [hotel]);
+  }, [hotelId]);
 
   async function handleClick() {
     try {
@@ -61,7 +64,7 @@ export default function Rooms({ hotelId, setStep }) {
       toast('Não foi possível salvar suas informações!');
     }
   }
-    
+  
   return (
     <>
       <Subtitle variant='h6'>Ótima pedida! Agora escolha seu quarto</Subtitle>
@@ -113,7 +116,7 @@ function RoomBox({
     setRoomOccupancy(response);
 
     setVacancies(vacanciesInfo);
-  }, []);
+  }, [info]);
 
   useEffect(() => {
     if(bookParams.roomId === info.id) {

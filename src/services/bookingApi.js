@@ -6,7 +6,6 @@ export async function getBooking(token) {
       Authorization: `Bearer ${token}`,
     },
   });
-  
   return response.data;
 }
 
@@ -37,5 +36,14 @@ export async function changeBooking(data, token) {
     },
   });
   
+  return response.data;
+}
+
+export async function getAllBooking(token) {
+  const response = await api.get('/booking/bookings', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 }

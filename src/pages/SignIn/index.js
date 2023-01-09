@@ -7,12 +7,15 @@ import AuthLayout from '../../layouts/Auth';
 import Input from '../../components/Form/Input';
 import Button from '../../components/Form/Button';
 import Link from '../../components/Link';
-import { Row, Title, Label } from '../../components/Auth';
+import OAuth from '../../components/Auth/OAuth';
+import { Row, Title, Label, Subtitle, Divider, Line, OAuthWrapper } from '../../components/Auth';
 
 import EventInfoContext from '../../contexts/EventInfoContext';
 import UserContext from '../../contexts/UserContext';
 
 import useSignIn from '../../hooks/api/useSignIn';
+
+import { googleAuth, githubAuth, facebookAuth } from '../../utils/authUtils';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -36,7 +39,7 @@ export default function SignIn() {
     } catch (err) {
       toast('Não foi possível fazer o login!');
     }
-  } 
+  }   
 
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>
@@ -52,6 +55,21 @@ export default function SignIn() {
           <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
         </form>
       </Row>
+
+      <Row>
+        <Divider>
+          <Line></Line>
+          <Subtitle>Ou faça login com</Subtitle>
+          <Line></Line>
+        </Divider>
+      </Row>
+
+      <OAuthWrapper>
+        <OAuth logo={googleAuth.logo} name={googleAuth.name} />
+        <OAuth logo={githubAuth.logo} name={githubAuth.name}/>
+        <OAuth logo={facebookAuth.logo} name={facebookAuth.name}/>
+      </OAuthWrapper>
+
       <Row>
         <Link to="/enroll">Não possui login? Inscreva-se</Link>
       </Row>
