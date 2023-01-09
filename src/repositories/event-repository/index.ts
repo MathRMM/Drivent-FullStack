@@ -4,8 +4,16 @@ async function findFirst() {
   return prisma.event.findFirst({
     include: {
       Activities: true,
-      Places: true
-    }
+      Places: {
+        include: {
+          Activities: {
+            include: {
+              Participants: true
+            }
+          }
+        }
+      }
+    },
   });
 }
 
