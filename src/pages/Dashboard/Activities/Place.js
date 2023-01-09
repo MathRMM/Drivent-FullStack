@@ -5,16 +5,13 @@ import { eachHourOfInterval, getDayOfYear, getHours, getYear, parseISO } from 'd
 import { useEffect, useState } from 'react';
 export default function Place({ place, selectedDateBox }) {
   const [hoursOccupancyState, setHoursOccupancyState] = useState([]);
-  const [activity, setActivity] = useState({});
-  const [isToday, setIsToday] = useState(false);
+  const [activities, setActivities] = useState([]);
   useEffect(() => {
     setHoursOccupancyState([]);
-    setIsToday(false);
-    setActivity(place.Activities);
+    setActivities(place.Activities);
     let hoursOccupancy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     (place.Activities).map((activity) => {
       if((getDayOfYear(parseISO(activity.startsAt)) === getDayOfYear(selectedDateBox)) && (getYear(parseISO(activity.startsAt)) === getYear(selectedDateBox))) {
-        setIsToday(true);
         const hoursArr = eachHourOfInterval({ start: parseISO(activity.startsAt), end: parseISO(activity.endsAt) });
         for(let i=0; i<hoursArr.length-1; i++) {
           let hourOccupancy = getHours(hoursArr[i])-6;
@@ -25,7 +22,6 @@ export default function Place({ place, selectedDateBox }) {
         }
       }
     });
-    console.log(place.Activities);
   }, [selectedDateBox]);
   return (
     <Flexing>
@@ -36,18 +32,18 @@ export default function Place({ place, selectedDateBox }) {
             if((hasActivity === hoursOccupancyState[index-1]) && (hasActivity !== 0)) {
               return <NoneActivity key={index}></NoneActivity>;
             }
-            if(isToday === true) {
-              if(hasActivity === 0) {
-                return <BlankActivity key={index}></BlankActivity>;
-              }else {
-                for(let i=0; i<activity.length; i++) {
-                  const duration = getHours(parseISO(activity[i].endsAt))-getHours(parseISO(activity[i].startsAt));
+            if(hasActivity === 0) {
+              return <BlankActivity key={index}></BlankActivity>;
+            }else {
+              for(let i=0; i<activities.length; i++) {
+                if(activities[i].id === hasActivity) {
+                  let duration = getHours(parseISO(activities[i].endsAt))-getHours(parseISO(activities[i].startsAt));
                   for(let j=2; j<13; j++) {
                     if(duration === j) {
-                      return <Activity key={index} activity={activity[i]} duration={j}/>;
+                      return <Activity key={index} activity={activities[i]} duration={j}/>;
                     }
                   }
-                  return <Activity key={index} activity={activity[i]} duration={1}/>;
+                  return <Activity key={index} activity={activities[i]} duration={1}/>;
                 }
               }
             }
