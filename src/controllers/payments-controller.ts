@@ -2,6 +2,7 @@ import { AuthenticatedRequest } from "@/middlewares";
 import paymentService from "@/services/payments-service";
 import { Response } from "express";
 import httpStatus from "http-status";
+import { creditCardValidation } from "@/middlewares/payment-middleware";
 
 export async function getPaymentByTicketId(req: AuthenticatedRequest, res: Response) {
   try {
@@ -26,16 +27,15 @@ export async function getPaymentByTicketId(req: AuthenticatedRequest, res: Respo
 }
 
 export async function paymentProcess(req: AuthenticatedRequest, res: Response) {
-  try {
-    const { userId } = req;
-    const {
-      ticketId,
-      cardData,
-    } = req.body;
+  const { userId } = req;
+  const { ticketId, cardData } = req.body;
 
+  try {
     if (!ticketId || !cardData) {
       return res.sendStatus(httpStatus.BAD_REQUEST);
     }
+
+    const isCardValid = creditCardValidation(cardData);
     const payment = await paymentService.paymentProcess(ticketId, userId, cardData);
 
     if (!payment) {
@@ -45,7 +45,7 @@ export async function paymentProcess(req: AuthenticatedRequest, res: Response) {
     return res.status(httpStatus.OK).send(payment);
   } catch (error) {
     if (error.name === "UnauthorizedError") {
-      return res.sendStatus(httpStatus.UNAUTHORIZED);
+      return res.status(httpStatus.UNAUTHORIZED).send(error.message);
     }
     return res.sendStatus(httpStatus.NOT_FOUND);
   }

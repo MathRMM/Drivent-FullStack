@@ -16,8 +16,19 @@ async function checkEnrollmentTicket(userId: number) {
   }
 }
 
-async function checkValidBooking(roomId: number) {
+async function getRoomOccupancy(roomId: number) {
   const room = await roomRepository.findById(roomId);
+  if (!room) {
+    throw notFoundError();
+  }
+
+  const bookings = await bookingRepository.findByRoomId(roomId);
+
+  return bookings.length;
+}
+
+async function checkValidBooking(roomId: number) {
+  const room = await roomRepository.findById(roomId); 
   const bookings = await bookingRepository.findByRoomId(roomId);
 
   if (!room) {
@@ -59,10 +70,16 @@ async function changeBookingRoomById(userId: number, roomId: number) {
   });
 }
 
+async function bookingWithHotelId() {
+  return await bookingRepository.findBookingWithHotelId(); 
+}
+
 const bookingService = {
   bookingRoomById,
   getBooking,
   changeBookingRoomById,
+  getRoomOccupancy,
+  bookingWithHotelId
 };
 
 export default bookingService;
