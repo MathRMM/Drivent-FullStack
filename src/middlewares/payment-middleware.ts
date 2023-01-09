@@ -1,13 +1,13 @@
-import { isValid, isExpirationDateValid, isSecurityCodeValid, getCreditCardNameByNumber } from "creditcard.js";
+import cardValidator from "card-validator";
 import { CardPaymentParams } from "@/services/payments-service";
 
 export function creditCardValidation(cardData: CardPaymentParams): string {
-  const expiry = cardData.expirationDate.split("/");
-  const isNumberValid = isValid(cardData.number);
-  const isExpiryValid: boolean = isExpirationDateValid(expiry[0], expiry[1]);
-  const isCVVValid: boolean = isSecurityCodeValid(cardData.number, cardData.cvv);
-  const isIssuerValid: boolean = getCreditCardNameByNumber(cardData.number) === cardData.issuer;
+  const isNumberValid = cardValidator.number(cardData.number);
+  const isExpiryValid= cardValidator.expirationDate(cardData.expirationDate);
+  const isCVVValid = cardValidator.cvv(cardData.cvv);
+
+  console.log(isNumberValid, isExpiryValid, isCVVValid);
   
-  if (!isNumberValid || !isExpiryValid || !isCVVValid || !isIssuerValid) throw { name: "UnauthorizedError", message: "cartao invalido" };
+  if (!isNumberValid.isValid || !isExpiryValid.isValid || !isCVVValid.isValid) throw { name: "UnauthorizedError", message: "cartao invalido" };
   return "ok";
 }
