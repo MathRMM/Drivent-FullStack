@@ -11,7 +11,7 @@ async function getAddressFromCEP(cep: string): Promise<AddressEnrollment> {
 
   if (!result) {
     throw notFoundError(); //lançar -> pro arquivo que chamou essa função
-  }
+  } 
 
   const {
     bairro,
