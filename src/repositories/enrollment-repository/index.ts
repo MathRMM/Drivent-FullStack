@@ -1,6 +1,8 @@
 import { prisma } from "@/config";
+import { requestError } from "@/errors";
 import { Enrollment } from "@prisma/client";
 import { Address } from "@prisma/client";
+import httpStatus from "http-status";
 
 async function findWithAddressByUserId(userId: number) {
   return prisma.enrollment.findFirst({
@@ -32,6 +34,10 @@ async function upsert(
       create: createdEnrollment,
       update: updatedEnrollment,
     });
+
+    if(!newEnrollment) {
+      throw requestError(httpStatus.BAD_REQUEST, httpStatus["400_MESSAGE"]);
+    }
 
     await prisma.address.upsert({
       where: {
