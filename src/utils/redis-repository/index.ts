@@ -12,7 +12,6 @@ async function saveRedis(obj: Obj) {
 
 async function getRedis(key: string) {
   const redisJson =  await (await connectRedis()).get(key);
-  console.log(redisJson);
   return JSON.parse(redisJson);
 }
 
