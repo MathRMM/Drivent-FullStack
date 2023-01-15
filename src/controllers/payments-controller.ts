@@ -35,7 +35,7 @@ export async function paymentProcess(req: AuthenticatedRequest, res: Response) {
       return res.sendStatus(httpStatus.BAD_REQUEST);
     }
 
-    //const isCardValid = creditCardValidation(cardData);
+    const isCardValid = creditCardValidation(cardData);
     const payment = await paymentService.paymentProcess(ticketId, userId, cardData);
 
     if (!payment) {
