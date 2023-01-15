@@ -1,7 +1,7 @@
 import eventsService from "@/services/events-service";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import { getRedis, saveRedis } from "@/utils/redis-repository";
+import { getRedis, saveRedis } from "@/utils/redis";
 
 export async function getDefaultEvent(_req: Request, res: Response) {
   try {
