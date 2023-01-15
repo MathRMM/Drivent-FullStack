@@ -13,6 +13,7 @@ export default function Activities() {
   const event = useEvent().event;
   const [eventDays, setEventDays] = useState([]);
   const [eventPlaces, setEventPlaces] = useState([]);
+  const [eventActivities, setEventActivities] = useState([]);
   const [selectedDateBox, setSelectedDateBox] = useState(0);
   const [isPaid, setIsPaid] = useState(false);
   const [isRemote, setIsRemote] = useState(false);
@@ -23,15 +24,18 @@ export default function Activities() {
       } else {
         setIsPaid(true);
       }
-      for(let i=0; i<ticketType.length; i++) {
-        if(ticket.ticketTypeId === ticketType[i].id) {
-          if(ticketType[i].isRemote === true) {
-            setIsRemote(true);
+      if(ticketType) {
+        for(let i=0; i<ticketType.length; i++) {
+          if(ticket.ticketTypeId === ticketType[i].id) {
+            if(ticketType[i].isRemote === true) {
+              setIsRemote(true);
+            }
           }
         }
+        setEventDays(eachDayOfInterval({ start: parseISO(event.startsAt), end: parseISO(event.endsAt) }));
+        setEventActivities(event.Activities);
+        setEventPlaces(event.Places);
       }
-      setEventDays(eachDayOfInterval({ start: parseISO(event.startsAt), end: parseISO(event.endsAt) }));
-      setEventPlaces(event.Places);
     }
   }, [ticket]);
   return (
@@ -52,7 +56,7 @@ export default function Activities() {
               ) }
               <DatesBox>{eventDays.map((day, index) => <Day key={index} day={day} selectedDateBox={selectedDateBox} setSelectedDateBox={setSelectedDateBox} />)}</DatesBox>
               { (selectedDateBox !== 0) ? (
-                <PlacesTrails>{(eventPlaces).map((place, index) => <Place key={index} place={place} selectedDateBox={selectedDateBox} />)}</PlacesTrails>
+                <PlacesTrails>{(eventPlaces).map((place, index) => <Place key={index} place={place} selectedDateBox={selectedDateBox} eventActivities={eventActivities} />)}</PlacesTrails>
               ):(
                 <></>
               ) }
