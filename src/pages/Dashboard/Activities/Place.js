@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import Activity from './Activity';
 import { eachHourOfInterval, getDayOfYear, getHours, getYear, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
-export default function Place({ place, selectedDateBox }) {
+export default function Place({ place, selectedDateBox, eventActivities }) {
   const [hoursOccupancyState, setHoursOccupancyState] = useState([]);
   const [activities, setActivities] = useState([]);
   useEffect(() => {
@@ -40,10 +40,10 @@ export default function Place({ place, selectedDateBox }) {
                   let duration = getHours(parseISO(activities[i].endsAt))-getHours(parseISO(activities[i].startsAt));
                   for(let j=2; j<13; j++) {
                     if(duration === j) {
-                      return <Activity key={index} activity={activities[i]} duration={j}/>;
+                      return <Activity key={index} activity={activities[i]} duration={j} eventActivities={eventActivities}/>;
                     }
                   }
-                  return <Activity key={index} activity={activities[i]} duration={1}/>;
+                  return <Activity key={index} activity={activities[i]} duration={1} eventActivities={eventActivities}/>;
                 }
               }
             }
