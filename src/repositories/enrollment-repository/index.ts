@@ -1,5 +1,8 @@
 import { prisma } from "@/config";
+import { requestError } from "@/errors";
 import { Enrollment } from "@prisma/client";
+import { Address } from "@prisma/client";
+import httpStatus from "http-status";
 
 async function findWithAddressByUserId(userId: number) {
   return prisma.enrollment.findFirst({
@@ -20,16 +23,37 @@ async function upsert(
   userId: number,
   createdEnrollment: CreateEnrollmentParams,
   updatedEnrollment: UpdateEnrollmentParams,
+  createdAddress: CreateAddressParams,
+  updatedAddress: UpdateAddressParams,
 ) {
-  return prisma.enrollment.upsert({
-    where: {
-      userId,
-    },
-    create: createdEnrollment,
-    update: updatedEnrollment,
+  await prisma.$transaction(async (tx) => {
+    const newEnrollment = await prisma.enrollment.upsert({
+      where: {
+        userId,
+      },
+      create: createdEnrollment,
+      update: updatedEnrollment,
+    });
+
+    if(!newEnrollment) {
+      throw requestError(httpStatus.BAD_REQUEST, httpStatus["400_MESSAGE"]);
+    }
+
+    await prisma.address.upsert({
+      where: {
+        enrollmentId: newEnrollment.id,
+      },
+      create: {
+        ...createdAddress,
+        Enrollment: { connect: { id: newEnrollment.id } },
+      },
+      update: updatedAddress,
+    });
   });
 }
 
+export type CreateAddressParams = Omit<Address, "id" | "createdAt" | "updatedAt" | "enrollmentId">;
+export type UpdateAddressParams = CreateAddressParams;
 export type CreateEnrollmentParams = Omit<Enrollment, "id" | "createdAt" | "updatedAt">;
 export type UpdateEnrollmentParams = Omit<CreateEnrollmentParams, "userId">;
 
