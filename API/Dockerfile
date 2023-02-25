@@ -22,8 +22,6 @@ ENV PORT=4000
 # passo 7 - export a port da aplicação
 EXPOSE 4000
 RUN npx prisma generate
-RUN npx prisma migrate
-RUN npx seed
 RUN npm run build
 # passo 8 - executar a aplicação
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:docker" ]
